@@ -115,7 +115,7 @@ function updateEmployee(event) {
         salary: document.getElementById("salary").value
     };
 
-    fetch("/employees/" + eid, {
+    fetch(BASE_URL + "/employees/" + eid, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

@@ -114,9 +114,10 @@
     </div>
 
     <script>
+    const BASE_URL = "https://employee-management-system-springboot-dbuw.onrender.com";
 
         function loadEmployees() {
-            fetch("/employees")
+            fetch(BASE_URL + "/employees")
                 .then(function(response) {
                     return response.json();
                 })
@@ -142,7 +143,7 @@
 
             // search by ID
             if (!isNaN(keyword)) {
-                fetch("/employees/" + keyword)
+                fetch(BASE_URL + "/employees/" + keyword)
                     .then(function(response) {
                         if (!response.ok) {
                             throw new Error("Not found");
@@ -159,7 +160,7 @@
                     });
             }else {
                 // search by name
-                fetch("/employees/search?keyword=" + encodeURIComponent(keyword))
+                fetch(BASE_URL + "/employees/search?keyword=" + encodeURIComponent(keyword))
                     .then(function(response) {
                         return response.json();
                     })
@@ -211,7 +212,7 @@
 
         //store employee data before navigating to update page
         function goToUpdate(eid) {
-            fetch("/employees/" + eid)
+            fetch(BASE_URL + "/employees/" + eid)
                 .then(function(response) {
                     return response.json();
                 })
@@ -231,7 +232,7 @@
                 return;
             }
 
-            fetch("/employees/" + eid, {
+            fetch(BASE_URL + "/employees/" + eid, {
                 method: "DELETE"
             })
                 .then(function(response) {

@@ -118,6 +118,9 @@
         style="display: none;">Error Message</div>
 
     <script>
+    
+    const BASE_URL = "https://employee-management-system-springboot-dbuw.onrender.com";
+    
  	// Clear previous validation messages
 	function clearErrors() {
 	    document.getElementById("nameError").innerText = "";
@@ -139,7 +142,7 @@
 	    const salary = document.getElementById("salary").value;
 		
 	    // Send employee data to the backend API
-	    fetch("/employees", {
+	    fetch(BASE_URL + "/employees", {
 	        method: "POST",
 	        headers: {
 	            "Content-Type": "application/json"
