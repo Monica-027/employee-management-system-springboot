@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Management System</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <style>
+        .search-box {
+            position: relative;
+            width: 350px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 110px 10px 40px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: gray;
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            bottom: 4px;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 10px;
+            right: 20px;
+            padding: 5px;
+            min-width: 250px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-primary">
+        <div class="container">
+            <h3 class="mx-auto text-white">Employee Management System</h3>
+        </div>
+    </nav>
+    
+    <!-- Search and Controls -->
+    <div class="container mt-3">
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div class="d-flex gap-2">
+                <a href="/add.html">
+                    <button class="btn btn-success">
+                        <i class="bi bi-plus"></i> 
+                        Add Employee
+                    </button>
+                </a>
+
+                <button class="btn btn-primary" onclick="loadEmployees()">
+                    Show All Employees
+                </button>
+            </div>
+
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input id="searchInput" type="text" placeholder="Search By Id or Name"
+                       onkeydown="if(event.key === 'Enter') searchEmployee()">
+                <button class="btn btn-success" onclick="searchEmployee()">Search</button>
+            </div>
+
+        </div>
+    </div>
+ 
+    <!-- Toast Messages -->
+    <div id="successToast" class="alert alert-success text-center toast-msg" style="display:none;">
+        Success Message
+    </div>
+
+    <div id="errorToast" class="alert alert-danger text-center toast-msg" style="display:none;">
+        Error Message
+    </div>
+
+    <!-- Employee Table -->
+    <div class="table-container mt-3">
+        <h5 class="text-center fw-bold">Employees</h5>
+
+        <table class="table table-hover table-striped table-bordered mx-auto" style="width: 85%">
+            <thead class="text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Department</th>
+                    <th>Salary</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="employeeTable" class="text-center">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+
+        function loadEmployees() {
+            fetch("/employees")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    renderTable(data);
+                })
+                .catch(function(error) {
+                    console.error("Error:", error);
+                    showError("Failed to load Employees");
+                });
+        }
+
+        
+        function searchEmployee() {
+            var keyword = document.getElementById("searchInput").value.trim();
+			
+         	// Show all employees when search box is empty
+            if (keyword === "") {
+              
+                loadEmployees();
+                return;
+            }
+
+            // search by ID
+            if (!isNaN(keyword)) {
+                fetch("/employees/" + keyword)
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error("Not found");
+                        }
+                        return response.json();
+                    })
+                    .then(function(emp) {
+                        renderTable([emp]);
+                    })
+                    .catch(function(error) {
+                    	console.error("Error:", error);
+                        showError("No employee found with ID: " + keyword);
+                        renderTable([]);
+                    });
+            }else {
+                // search by name
+                fetch("/employees/search?keyword=" + encodeURIComponent(keyword))
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                    	if(data.length === 0){
+                    		throw new Error("No employee found");
+                    	}
+                        renderTable(data);
+                    })
+                    .catch(function(error) {
+                    	console.error("Error:", error);
+                        showError("No employee found with Name: " + keyword);
+                        renderTable([]);
+                    });
+            }
+        }
+
+        // Renders employee list from backend into the table
+        function renderTable(data) {
+            var table = document.getElementById("employeeTable");
+            table.innerHTML = "";
+
+            if (data.length === 0) {
+                table.innerHTML = `<tr><td colspan='7' class='text-center text-danger fw-bold fs-5 py-3'>No Employees Found</td></tr>`;
+                return;
+            }
+
+            data.forEach(function(emp) {
+                var row = `
+                    <tr>
+                        <td>${emp.eid}</td>
+                        <td>${emp.name}</td>
+                        <td>${emp.email}</td>
+                        <td>${emp.phone}</td>
+                        <td>${emp.department}</td>
+                        <td>${emp.salary}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="goToUpdate(${emp.eid})">
+                                Update
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteEmployee(${emp.eid})">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>`;
+                table.innerHTML += row;
+            });
+        }
+
+        //store employee data before navigating to update page
+        function goToUpdate(eid) {
+            fetch("/employees/" + eid)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(emp) {
+                    localStorage.setItem("employee", JSON.stringify(emp));
+                    window.location.href = "update.html";
+                })
+                .catch(function(error) {
+                	console.error("Error:", error);
+                    showError("Failed to fetch employee");
+                });
+        }
+
+        function deleteEmployee(eid) {
+        	// Cancel deletion if user clicks Cancel
+            if (!confirm("Are you sure you want to delete?")) {
+                return;
+            }
+
+            fetch("/employees/" + eid, {
+                method: "DELETE"
+            })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("Delete failed");
+                    }
+                    showSuccess("Employee deleted successfully");
+                    setTimeout(function() {
+                        loadEmployees();
+                    }, 800);
+                })
+                .catch(function(error) {
+                	console.error("Error:", error);
+                    showError("Delete failed");
+                });
+        }
+
+        function showSuccess(message) {
+            var toast = document.getElementById("successToast");
+            toast.innerText = message;
+            toast.style.display = "block";
+            setTimeout(function() {
+                toast.style.display = "none";
+            }, 1200);
+        }
+
+        function showError(message) {
+            var toast = document.getElementById("errorToast");
+            toast.innerText = message;
+            toast.style.display = "block";
+            setTimeout(function() {
+                toast.style.display = "none";
+            }, 1200);
+        }
+
+        window.onload = loadEmployees;
+
+    </script>
+</body>
+</html>
