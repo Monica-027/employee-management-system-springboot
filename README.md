@@ -43,6 +43,17 @@ A full-stack Employee Management System built using Spring Boot, PostgreSQL, HTM
 | DELETE | /employees/{eid} | Delete employee |
 | GET | /employees/search?keyword=name | Search employee by name |
 
+## Screenshots
+
+### Home Page
+<img src="screenshots/home.png" width="700">
+
+### Add Employee
+<img src="screenshots/add.png" width="700">
+
+### Update Employee
+<img src="screenshots/update.png" width="700">
+
 ## Validation Rules
 
 - Name is required
