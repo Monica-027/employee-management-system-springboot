@@ -3,6 +3,9 @@ package com.ems.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,8 +32,9 @@ public class EmployeeController {
 	private EmployeeService service;
 
 	@PostMapping
-	public EmployeeDTO saveEmployee(@RequestBody @Valid EmployeeDTO dto) {
-		return service.saveEmployee(dto);
+	public ResponseEntity<EmployeeDTO> saveEmployee(@RequestBody @Valid EmployeeDTO dto) {
+		EmployeeDTO saved = service.saveEmployee(dto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(saved);
 	}
 
 	@GetMapping
@@ -62,9 +66,9 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping("/{eid}")
-	public String deleteEmployee(@PathVariable Long eid) {
-		service.deleteEmployee(eid);
-		return "Emp with eid: " + eid + " deleted";
-	}
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long eid) {
+        service.deleteEmployee(eid);
+        return ResponseEntity.noContent().build();
+    }
 
 }

@@ -156,10 +156,6 @@
 	    	 // Handles validation errors returned by the server
 	        if (!response.ok) {
 	            return response.json().then(function(errors){
-	            	/* console.log(errors);
-	            	console.log(errors.name);
-	            	console.log(errors.email);
-	            	console.log(errors.department); */
 
 	            	// Displays field-specific validation messages
 	                if(errors.name){
@@ -204,7 +200,7 @@
     
         setTimeout(function() {
             toast.style.display = "none";
-        }, 1200);
+        }, 1000);
     }
 	
  	// Displays error notification
@@ -215,7 +211,7 @@
     
         setTimeout(function() {
             toast.style.display = "none";
-        }, 1200);
+        }, 1000);
     }
     
    </script>
