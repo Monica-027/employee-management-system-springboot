@@ -1,6 +1,10 @@
 # Employee Management System
 
-A full-stack Employee Management System built using Spring Boot, PostgreSQL, HTML, CSS, Bootstrap, and JavaScript.
+A full-stack Employee Management System built using Spring Boot, Spring Data JPA, PostgreSQL, HTML, CSS, Bootstrap, and JavaScript. The application allows users to perform employee management operations through a responsive web interface and is deployed on Render using a Neon PostgreSQL database.
+
+## Live Demo 
+**Live Application:** 
+https://employee-management-system-springboot-dbuw.onrender.com
 
 ## Features
 
@@ -17,12 +21,22 @@ A full-stack Employee Management System built using Spring Boot, PostgreSQL, HTM
 ## Technologies Used
 
 ### Backend
-- Java
+- Java 
 - Spring Boot
 - Spring Data JPA
 - Hibernate
 - PostgreSQL
 - Maven
+
+### Database 
+- PostgreSQL 
+- Neon Database 
+
+### Validation 
+- Jakarta Bean Validation
+
+### Deployment 
+- Render
 
 ### Frontend
 - HTML
@@ -33,15 +47,15 @@ A full-stack Employee Management System built using Spring Boot, PostgreSQL, HTM
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /employees | Add employee |
-| GET | /employees | Get all employees |
-| GET | /employees/{eid} | Get employee by ID |
-| PUT | /employees/{eid} | Update employee |
-| PATCH | /employees/{eid} | Update selected fields |
-| DELETE | /employees/{eid} | Delete employee |
-| GET | /employees/search?keyword=name | Search employee by name |
+| Method | Endpoint | Description | 
+|--------|----------|-------------| 
+| POST | `/employees` | Add employee | 
+| GET | `/employees` | Get all employees | 
+| GET | `/employees/{eid}` | Get employee by ID | 
+| PUT | `/employees/{eid}` | Update employee | 
+| PATCH | `/employees/{eid}` | Update selected fields | 
+| DELETE | `/employees/{eid}` | Delete employee | 
+| GET | `/employees/search?keyword=name` | Search employee by name |
 
 ## Screenshots
 
@@ -80,7 +94,7 @@ src
 └── exception
 ```
 
-## How to Run
+## How to Run Locally
 
 1. Clone the repository.
 2. Configure PostgreSQL database.
@@ -89,7 +103,7 @@ src
 5. Open the application in your browser.
 
 ```
-http://localhost:8081
+http://localhost:8080
 ```
 
 ## Future Improvements
